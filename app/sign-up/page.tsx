@@ -3,8 +3,45 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signUp } from "@/lib/auth/auth-client";
 export default function Signup() {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const router = useRouter();
+
+    async function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+
+        setError("");
+        setLoading(true);
+
+        try {
+            const result = await signUp.email({
+                name,
+                email,
+                password,
+            });
+
+            if (result.error) {
+                setError(result.error.message ?? "Failed to sign up");
+            } else {
+                router.push("/dashboard");
+            }
+        } catch (err) {
+            setError("An unexpected error occurred");
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (<div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-white p-4">
         <Card className="w-full max-w-md border-gray-200 shadow-lg">
             <CardHeader className="space-y-1">
@@ -15,9 +52,9 @@ export default function Signup() {
                     Create an account to start tracking your job applications
                 </CardDescription>
             </CardHeader>
-            <form  className="space-y-4">
+            <form className="space-y-4">
                 <CardContent className="space-y-4">
-                   
+
                     <div className="space-y-2">
                         <Label htmlFor="name" className="text-gray-700">
                             Name
@@ -26,6 +63,8 @@ export default function Signup() {
                             id="name"
                             type="text"
                             placeholder="John Doe"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                             required
                             className="border-gray-300 focus:border-primary focus:ring-primary"
                         />
@@ -38,6 +77,8 @@ export default function Signup() {
                             id="email"
                             type="email"
                             placeholder="you@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             required
                             className="border-gray-300 focus:border-primary focus:ring-primary"
                         />
@@ -50,6 +91,8 @@ export default function Signup() {
                             id="password"
                             type="password"
                             required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             minLength={8}
                             className="border-gray-300 focus:border-primary focus:ring-primary"
                         />
