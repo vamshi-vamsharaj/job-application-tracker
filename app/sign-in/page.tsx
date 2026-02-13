@@ -4,8 +4,41 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-export default function Signin(){
-return (<div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-white p-4">
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+export default function Signin() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const router = useRouter();
+    async function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+
+        setError("");
+        setLoading(true);
+
+        try {
+            const result = await signIn.email({
+                email,
+                password,
+            });
+
+            if (result.error) {
+                setError(result.error.message ?? "Failed to sign in");
+            } else {
+                router.push("/dashboard");
+            }
+        } catch (err) {
+            setError("An unexpected error occurred");
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    return (<div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-white p-4">
         <Card className="w-full max-w-md border-gray-200 shadow-lg">
             <CardHeader className="space-y-1">
                 <CardTitle className="text-2xl font-bold text-black">
@@ -15,7 +48,7 @@ return (<div className="flex min-h-[calc(100vh-4rem)] items-center justify-cente
                     Enter your credentials to access your account
                 </CardDescription>
             </CardHeader>
-            <form  className="space-y-4">
+            <form className="space-y-4">
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
                         <Label htmlFor="email" className="text-gray-700">
