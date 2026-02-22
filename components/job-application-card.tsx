@@ -3,6 +3,12 @@
 import { JobApplication, Column } from "@/lib/models/models.types";
 import { Card, CardContent } from "./ui/card";
 import { Edit2, ExternalLink, MoreVertical, Plus, Trash2 } from "lucide-react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
@@ -60,7 +66,39 @@ export default function JobApplicationCard({
                             )}
                         </div>
                         <div className="flex items-start gap-1">
-                            
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-6 w-6">
+                                        <MoreVertical className="h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem >
+                                        <Edit2 className="mr-2 h-4 w-4" />
+                                        Edit
+                                    </DropdownMenuItem>
+                                    {columns.length > 1 && (
+                                        <>
+                                            {columns
+                                                .filter((c) => c._id !== job.columnId)
+                                                .map((column, key) => (
+                                                    <DropdownMenuItem
+
+                                                    >
+                                                        Move to {column.name}
+                                                    </DropdownMenuItem>
+                                                ))}
+                                        </>
+                                    )}
+                                    <DropdownMenuItem
+                                        className="text-destructive"
+
+                                    >
+                                        <Trash2 className="mr-2 h-4 w-4" />
+                                        Delete
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                     </div>
                 </CardContent>
