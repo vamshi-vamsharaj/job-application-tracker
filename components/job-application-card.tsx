@@ -14,6 +14,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import React, { useState } from "react";
+import { updateJobApplication } from "@/lib/actions/job-applications";
 interface JobApplicationCardProps {
     job: JobApplication;
     columns: Column[];
@@ -24,6 +25,15 @@ export default function JobApplicationCard({
     columns,
 }: JobApplicationCardProps) {
 
+     async function handleMove(newColumnId: string) {
+    try {
+      const result = await updateJobApplication(job._id, {
+        columnId: newColumnId,
+      });
+    } catch (err) {
+      console.error("Failed to move job application: ", err);
+    }
+  }
     return (
         <>
             <Card
@@ -83,10 +93,11 @@ export default function JobApplicationCard({
                                                 .filter((c) => c._id !== job.columnId)
                                                 .map((column, key) => (
                                                     <DropdownMenuItem
-
-                                                    >
-                                                        Move to {column.name}
-                                                    </DropdownMenuItem>
+                            key={key}
+                            onClick={() => handleMove(column._id)}
+                          >
+                            Move to {column.name}
+                          </DropdownMenuItem>
                                                 ))}
                                         </>
                                     )}
@@ -108,3 +119,4 @@ export default function JobApplicationCard({
         </>
     );
 }
+
