@@ -76,6 +76,14 @@ export function useBoard(initialBoard?: Board | null) {
             return newColumns;
         });
 
+        try {
+            const result = await updateJobApplication(jobApplicationId, {
+                columnId: newColumnId,
+                order: newOrder,
+            });
+        } catch (err) {
+            console.error("Error", err);
+        }
 
     }
 
