@@ -11,7 +11,6 @@ import {
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import {
-
     deleteJobApplication,
     updateJobApplication,
 } from "@/lib/actions/job-applications";
@@ -30,11 +29,13 @@ import React, { useState } from "react";
 interface JobApplicationCardProps {
     job: JobApplication;
     columns: Column[];
+    dragHandleProps?: React.HTMLAttributes<HTMLElement>;
 }
 
 export default function JobApplicationCard({
     job,
     columns,
+    dragHandleProps,
 }: JobApplicationCardProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
@@ -67,6 +68,7 @@ export default function JobApplicationCard({
             console.error("Failed to move job application: ", err);
         }
     }
+
     async function handleDelete() {
         try {
             const result = await deleteJobApplication(job._id);
@@ -92,7 +94,7 @@ export default function JobApplicationCard({
         <>
             <Card
                 className="cursor-pointer transition-shadow hover:shadow-lg bg-white group shadow-sm"
-
+                {...dragHandleProps}
             >
                 <CardContent className="p-4">
                     <div className="flex items-start justify-between gap-2">
@@ -168,6 +170,7 @@ export default function JobApplicationCard({
                     </div>
                 </CardContent>
             </Card>
+
             <Dialog open={isEditing} onOpenChange={setIsEditing}>
                 <DialogContent className="max-w-2xl">
                     <DialogHeader>
@@ -284,9 +287,6 @@ export default function JobApplicationCard({
                     </form>
                 </DialogContent>
             </Dialog>
-
-
         </>
     );
 }
-
