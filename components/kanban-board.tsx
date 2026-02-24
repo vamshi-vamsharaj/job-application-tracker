@@ -301,7 +301,9 @@ export default function KanbanBoard({ board, userId }: KanbanBoardProps) {
         await moveJob(activeId, targetColumnId, newOrder);
     }
 
-
+    const activeJob = sortedColumns
+        .flatMap((col) => col.jobApplications || [])
+        .find((job) => job._id === activeId);
     return (
         <DndContext
             sensors={sensors}
@@ -328,7 +330,13 @@ export default function KanbanBoard({ board, userId }: KanbanBoardProps) {
                     })}
                 </div>
             </div>
-
+            <DragOverlay>
+                {activeJob ? (
+                    <div className="opacity-100">
+                        <JobApplicationCard job={activeJob} columns={sortedColumns} />
+                    </div>
+                ) : null}
+            </DragOverlay>
 
         </DndContext>
     );
